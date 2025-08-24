@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base API configuration
-const API_BASE_URL = import.meta.env.API_URL; // Adjust port as needed
+const API_BASE_URL = import.meta.env.API_URL; // Fallback to production API
 
 // Create axios instance with default config
 const api = axios.create({
