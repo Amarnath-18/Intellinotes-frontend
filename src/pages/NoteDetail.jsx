@@ -328,7 +328,7 @@ function NoteDetail() {
                           key={index}
                           className={`chat-message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
                         >
-                          <p className="text-sm">{message.content}</p>
+                          <ReactMarkdown >{message.content}</ReactMarkdown>
                         </div>
                       ))
                     )}
