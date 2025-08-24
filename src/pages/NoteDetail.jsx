@@ -29,6 +29,7 @@ function NoteDetail() {
   const [sessionId, setSessionId] = useState(null);
   const [showChat, setShowChat] = useState(false);
   const [titleGenerating, setTitleGenerating] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   useEffect(() => {
     fetchNote(id);
@@ -102,11 +103,12 @@ function NoteDetail() {
   };
 
   const clearChat = async () => {
-    if (sessionId && window.confirm('Clear chat history?')) {
+    if (sessionId) {
       try {
         await chatAPI.clearConversation(sessionId);
         setChatHistory([]);
         setSessionId(null);
+        setShowClearConfirm(false);
         toast.success('Chat cleared');
       } catch (error) {
         toast.error('Failed to clear chat');
@@ -366,12 +368,30 @@ function NoteDetail() {
                       <span className="text-xs text-gray-500">
                         {chatHistory.length} messages
                       </span>
-                      <button
-                        onClick={clearChat}
-                        className="text-xs text-red-600 hover:text-red-700"
-                      >
-                        Clear Chat
-                      </button>
+                      {!showClearConfirm ? (
+                        <button
+                          onClick={() => setShowClearConfirm(true)}
+                          className="text-xs text-red-600 hover:text-red-700"
+                        >
+                          Clear Chat
+                        </button>
+                      ) : (
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs text-gray-600">Sure?</span>
+                          <button
+                            onClick={clearChat}
+                            className="text-xs text-red-600 hover:text-red-700 font-medium"
+                          >
+                            Yes
+                          </button>
+                          <button
+                            onClick={() => setShowClearConfirm(false)}
+                            className="text-xs text-gray-500 hover:text-gray-700"
+                          >
+                            No
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
