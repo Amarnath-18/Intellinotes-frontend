@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base API configuration
-const API_BASE_URL = import.meta.env.API_URL; // Fallback to production API
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://your-actual-backend-url.com/api'; // Update with your actual backend URL
 
 // Create axios instance with default config
 const api = axios.create({
