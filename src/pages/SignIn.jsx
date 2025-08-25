@@ -35,6 +35,13 @@ function SignIn() {
     setLoading(false);
   };
 
+  const handleDemoUser = () => {
+    setFormData({
+      email: 'deten61230@evoxury.com',
+      password: '123'
+    });
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <motion.div
@@ -135,6 +142,16 @@ function SignIn() {
             ) : (
               <span>Sign In</span>
             )}
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            type="button"
+            onClick={handleDemoUser}
+            className="w-full border-2 border-primary-600 text-primary-600 hover:bg-primary-50 py-3 text-lg rounded-lg font-medium transition-colors duration-200"
+          >
+            Try Demo User
           </motion.button>
 
           <div className="text-center">
