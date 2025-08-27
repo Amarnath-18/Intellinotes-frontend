@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotesProvider } from './context/NotesContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
@@ -15,6 +15,7 @@ import Notes from './pages/Notes';
 import NoteDetail from './pages/NoteDetail';
 import CreateNote from './pages/CreateNote';
 import EditNote from './pages/EditNote';
+import AuthRoute from './components/AuthRoute';
 function App() {
   return (
     <AuthProvider>
@@ -24,8 +25,16 @@ function App() {
             <Navbar />
             <Routes>
               <Route path="/" element={<Landing />} />
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
+              <Route path="/signin" element={
+                <AuthRoute>
+                  <SignIn />
+                </AuthRoute>
+              } />
+              <Route path="/signup" element={
+                <AuthRoute>
+                  <SignUp />
+                </AuthRoute>
+              } />
               <Route path="/verify-otp" element={<VerifyOTP />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />

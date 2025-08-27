@@ -13,9 +13,11 @@ function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   
-  const { signUp } = useAuth();
+  const { signUp , isAthenticated } = useAuth();
   const navigate = useNavigate();
-
+  if(isAthenticated){
+    navigate('/dashboard');
+  }
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -30,7 +32,8 @@ function SignUp() {
     const result = await signUp(formData);
     
     if (result.success) {
-      navigate('/verify-otp', { state: { email: formData.email } });
+      
+      navigate('/verify-otp', { state: { email: formData.email , name: formData.name , password: formData.password } });
     }
     
     setLoading(false);

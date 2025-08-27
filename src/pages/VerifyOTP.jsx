@@ -13,7 +13,7 @@ function VerifyOTP() {
   const { verifyOTP, signUp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const email = location.state?.email;
+  const {email , name , password} = location.state;
 
   useEffect(() => {
     if (!email) {
@@ -80,7 +80,7 @@ function VerifyOTP() {
     setCanResend(false);
     
     // Resend OTP by calling signup again
-    await signUp({ email, name: 'Resend', password: 'temp' });
+    await signUp({ email, name, password});
   };
 
   return (

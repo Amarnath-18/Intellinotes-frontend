@@ -73,7 +73,7 @@ export function AuthProvider({ children }) {
     try {
       const response = await authAPI.signUp(userData);
       if (response.data.success) {
-        toast.success('Account created! Please check your email for OTP.');
+        toast.success('Check mailBox for OTP , if not found then given email is invalid');
         return { success: true };
       }
     } catch (error) {
