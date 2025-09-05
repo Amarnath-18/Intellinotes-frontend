@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useNotes } from '../context/NotesContext';
 import { chatAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
+import remarkGfm from 'remark-gfm';
 import { 
   ArrowLeft, 
   Edit, 
@@ -30,6 +33,43 @@ function NoteDetail() {
   const [showChat, setShowChat] = useState(false);
   const [titleGenerating, setTitleGenerating] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+
+  // Custom code component for ReactMarkdown
+  const CodeBlock = ({ node, inline, className, children, ...props }) => {
+    const match = /language-(\w+)/.exec(className || '');
+    const language = match ? match[1] : '';
+    
+    return !inline && language ? (
+      <div className="relative">
+        <div className="flex items-center justify-between bg-gray-800 text-gray-200 px-4 py-2 rounded-t-lg text-sm">
+          <span className="font-medium">{language}</span>
+        </div>
+        <SyntaxHighlighter
+          style={oneDark}
+          language={language}
+          PreTag="div"
+          className="rounded-t-none"
+          customStyle={{
+            margin: 0,
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
+          }}
+          {...props}
+        >
+          {String(children).replace(/\n$/, '')}
+        </SyntaxHighlighter>
+      </div>
+    ) : (
+      <code className="bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-sm font-mono" {...props}>
+        {children}
+      </code>
+    );
+  };
+
+  // Custom components for ReactMarkdown
+  const markdownComponents = {
+    code: CodeBlock,
+  };
 
   useEffect(() => {
     fetchNote(id);
@@ -196,7 +236,10 @@ function NoteDetail() {
             </h1>
             
             <div className="prose max-w-none">
-              <ReactMarkdown>
+              <ReactMarkdown 
+                rehypePlugins={[remarkGfm]} 
+                components={markdownComponents}
+              >
                 {currentNote.content}
               </ReactMarkdown>
             </div>
@@ -214,7 +257,12 @@ function NoteDetail() {
                 <Brain className="w-5 h-5 text-purple-600" />
                 <h3 className="text-lg font-semibold text-gray-900">AI Summary</h3>
               </div>
-              <ReactMarkdown>{currentNote.summary}</ReactMarkdown>
+              <ReactMarkdown 
+                rehypePlugins={[remarkGfm]} 
+                components={markdownComponents}
+              >
+                {currentNote.summary}
+              </ReactMarkdown>
             </motion.div>
           )}
         </div>
@@ -328,7 +376,9 @@ function NoteDetail() {
                           key={index}
                           className={`chat-message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
                         >
-                          <ReactMarkdown >{message.content}</ReactMarkdown>
+                          <ReactMarkdown components={markdownComponents}>
+                            {message.content}
+                          </ReactMarkdown>
                         </div>
                       ))
                     )}
